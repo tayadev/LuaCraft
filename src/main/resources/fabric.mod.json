@@ -1,0 +1,28 @@
+{
+	"schemaVersion": 1,
+	"id": "luacraft",
+	"version": "${version}",
+	"name": "Lua Craft",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Taya Crystals"
+	],
+	"contact": {
+		"homepage": "https://taya.one/",
+		"sources": "https://github.com/tayadev/luacraft"
+	},
+	"license": "MIT",
+	"icon": "assets/luacraft/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"one.taya.Main"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.15.0",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}
