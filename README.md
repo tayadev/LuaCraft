@@ -27,4 +27,4 @@ The `/lua` command allows you to run Lua scripts from chat or command blocks.
 
 ## Lua API
 
-### Minecraft
+TBD

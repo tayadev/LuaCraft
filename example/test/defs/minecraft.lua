@@ -10,7 +10,7 @@ function minecraft.say(message) end
 --- @return World
 function minecraft.getWorld(name) end
 
---- @param fn function
+--- @param fn fun(): boolean
 function minecraft.onTick(fn) end
 
 return minecraft
