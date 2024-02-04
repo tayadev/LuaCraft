@@ -11,7 +11,6 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 import net.minecraft.util.Identifier;
 
 import one.taya.lua.MinecraftLib;
-import one.taya.lua.WorldLib;
 
 public class ScriptManager {
 
@@ -23,7 +22,6 @@ public class ScriptManager {
     scripts = new HashMap<Identifier, LuaValue>();
 
     vm.load(new MinecraftLib());
-    vm.load(new WorldLib());
 
     vm.finder = new LuaResourceFinder();
     // vm.set("require", new require());
