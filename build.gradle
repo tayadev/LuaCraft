@@ -78,3 +78,12 @@ publishing {
 		}
 	}
 }
+
+task copyExamples(type: Copy) {
+	from 'examples'
+	into 'run/world/datapacks'
+}
+
+tasks.named('runServer').configure {
+	dependsOn copyExamples
+}

@@ -10,14 +10,15 @@
 			"version": "none",
 			"installMaven": "false",
 			"installGradle": "true"
-		}
-	}
+		},
+		"ghcr.io/devcontainers/features/node:1": {}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "java -version",
+	"postCreateCommand": "npm install docsify-cli -g"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
