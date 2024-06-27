@@ -2,6 +2,8 @@ package one.taya;
 
 import java.util.Optional;
 
+import org.luaj.vm2.LuaError;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -12,6 +14,8 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
+import net.minecraft.util.Formatting;
 
 public class LuaCommand {
   
@@ -48,9 +52,13 @@ public class LuaCommand {
 
     LuaScript luascript = result.get();
     
-    context.getSource().sendFeedback(() ->
-      Text.literal("Called /lua for script " + luascript.getIdentifier().toString() + " with source\n" + luascript.getSource())
-    , false);
+    try {
+      LuaCraft.LUA_SCRIPT_MANAGER.execute(luascript);
+    } catch(LuaError e) {
+      context.getSource().sendFeedback(() -> Text.literal(e.getMessage()).formatted(Formatting.RED), false);
+      return 0;
+    }
+
 
     return 1;
   }

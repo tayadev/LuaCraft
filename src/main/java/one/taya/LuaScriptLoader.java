@@ -13,10 +13,9 @@ import java.util.concurrent.Executor;
 
 import org.slf4j.Logger;
 
-import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Maps;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
 
@@ -28,16 +27,10 @@ import net.minecraft.registry.tag.TagGroupLoader;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceFinder;
 import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceReloader;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.server.command.CommandOutput;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
 
-public class LuaScriptLoader implements ResourceReloader, IdentifiableResourceReloadListener {
+public class LuaScriptLoader implements IdentifiableResourceReloadListener {
 
   // akin to net.minecraft.server.function.FunctionLoader
 
