@@ -5,8 +5,10 @@ import java.util.Optional;
 import org.luaj.vm2.LuaError;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.IdentifierArgumentType;
@@ -18,8 +20,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Formatting;
 
 public class LuaCommand {
-  
-  // Implement the `/lua ns:folder/script` command
 
 	public static final SuggestionProvider<ServerCommandSource> SUGGESTION_PROVIDER = (context, builder) -> {
 		LuaScriptManager luaScriptManager = LuaCraft.LUA_SCRIPT_MANAGER;
@@ -28,14 +28,19 @@ public class LuaCommand {
 	};
 
   public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-    dispatcher.register(
-      CommandManager.literal("lua")
-        .requires(source -> source.hasPermissionLevel(2))
-        .then(
-          CommandManager.argument("name", new IdentifierArgumentType())
-          .suggests(SUGGESTION_PROVIDER).executes(LuaCommand::execute)
-        )
-    );
+
+    LiteralCommandNode<ServerCommandSource> luaCommand = CommandManager
+    .literal("lua")
+    .requires(source -> source.hasPermissionLevel(2))
+    .then(CommandManager.literal("run")
+      .then(CommandManager.argument("source", StringArgumentType.greedyString())
+        .executes(LuaCommand::executeRun)))
+    .then(CommandManager.argument("name", IdentifierArgumentType.identifier())
+      .suggests(SUGGESTION_PROVIDER)
+      .executes(LuaCommand::execute))
+    .build();
+
+    dispatcher.getRoot().addChild(luaCommand);
   }
 
   private static int execute(CommandContext<ServerCommandSource> context) {
@@ -55,12 +60,32 @@ public class LuaCommand {
     try {
       LuaCraft.LUA_SCRIPT_MANAGER.execute(luascript);
     } catch(LuaError e) {
-      context.getSource().sendFeedback(() -> Text.literal(e.getMessage()).formatted(Formatting.RED), false);
+      sendErrorMessage(context.getSource(), e);
       return 0;
     }
 
 
     return 1;
+  }
+
+  private static int executeRun(CommandContext<ServerCommandSource> context) {
+    // Execute the Lua string
+    String source = StringArgumentType.getString(context, "source");
+
+    LuaScript luascript = new LuaScript(Identifier.of("luascript", "run"), source);
+
+    try {
+      LuaCraft.LUA_SCRIPT_MANAGER.execute(luascript);
+    } catch(LuaError e) {
+      sendErrorMessage(context.getSource(), e);
+      return 0;
+    }
+
+    return 1;
+  }
+
+  private static void sendErrorMessage(ServerCommandSource source, LuaError e) {
+    source.sendFeedback(() -> Text.literal(e.getMessage()).formatted(Formatting.RED), false);
   }
 
 }

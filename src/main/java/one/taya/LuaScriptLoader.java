@@ -3,6 +3,7 @@ package one.taya;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,6 +12,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.Executor;
 
+import org.luaj.vm2.Globals;
 import org.slf4j.Logger;
 
 import com.google.common.collect.ImmutableMap;
@@ -43,6 +45,7 @@ public class LuaScriptLoader implements IdentifiableResourceReloadListener {
 	private final TagGroupLoader<LuaScript> tagLoader = new TagGroupLoader<>(this::get, RegistryKeys.getTagPath(LUASCRIPT_REGISTRY_KEY));
 	private volatile Map<Identifier, Collection<LuaScript>> tags = Map.of();
 
+	protected Map<String, Globals> luaVMs = new HashMap<>();
 
   public Optional<LuaScript> get(Identifier id) {
     return Optional.ofNullable(this.luascripts.get(id));
@@ -69,6 +72,9 @@ public class LuaScriptLoader implements IdentifiableResourceReloadListener {
     Executor prepareExecutor,
     Executor applyExecutor
   ) {
+
+		// Discard all current Lua VMs
+		this.luaVMs.clear();
 
     CompletableFuture<Map<Identifier, List<TagGroupLoader.TrackedEntry>>> completableFuture = CompletableFuture.supplyAsync(
       () -> this.tagLoader.loadTags(manager), prepareExecutor
